@@ -8,12 +8,20 @@ from flask_cors import CORS  # Importar CORS
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+# Configurar la aplicación Flask
 app = Flask(__name__)
-CORS(app)  # Activar CORS para todas las rutas
+CORS(app)  # Activar CORS para todas las rutas, permitiendo que el frontend pueda hacer solicitudes a esta API
 
-@app.route('/chat', methods=['POST'])
+# Endpoint de la API para el chat
+@app.route('/api/chat', methods=['POST'])
 def chat():
+    """
+    Endpoint para recibir mensajes del usuario y responder usando la API de GPT-3.5.
+    Espera un JSON en el formato: { "message": "tu mensaje" }
+    """
     user_input = request.json.get('message')
+    
+    # Verificar si el mensaje está vacío
     if not user_input:
         return jsonify({"error": "Mensaje vacío"}), 400
     
@@ -28,10 +36,17 @@ def chat():
             max_tokens=150,
             temperature=0.8
         )
+        
+        # Obtener la respuesta de la API
         reply = response['choices'][0]['message']['content']
+        
+        # Responder al frontend en formato JSON
         return jsonify({"reply": reply})
+    
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        # Manejo de errores, respondiendo al cliente en caso de fallo
+        return jsonify({"error": "Ocurrió un error al procesar la solicitud.", "details": str(e)}), 500
 
+# Ejecutar la aplicación
 if __name__ == '__main__':
     app.run(port=5000)
