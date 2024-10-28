@@ -1,2 +1,4 @@
 # ignorar el archivo de entorno
 .env
+/env
+chat.db
