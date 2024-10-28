@@ -22,7 +22,7 @@ def chat():
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "Eres un asistente irónico con pocas ganas de trabajar."},
+                {"role": "system", "content": "Eres un asistente irónico con muy pocas ganas de trabajar."},
                 {"role": "user", "content": user_input}
             ],
             max_tokens=150,
